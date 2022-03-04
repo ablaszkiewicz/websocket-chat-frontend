@@ -1,8 +1,9 @@
+import { Message, MessageListItem } from './MessageListItem';
 import { VStack, Box, Text } from '@chakra-ui/react';
 import React from 'react';
 
 interface Props {
-  messages: string[];
+  messages: Message[];
 }
 
 export function MessagesPanel(props: Props) {
@@ -16,10 +17,8 @@ export function MessagesPanel(props: Props) {
       overflowY={'scroll'}
       css={scrollbarStyle}
     >
-      {props.messages.map((message, id) => (
-        <Box key={id} w={'100%'} borderWidth={'1px'} p={1} borderRadius={'5'} backgroundColor={'gray.900'}>
-          <Text>{message}</Text>
-        </Box>
+      {props.messages.map((message, i) => (
+        <MessageListItem message={message} key={i} />
       ))}
     </VStack>
   );
