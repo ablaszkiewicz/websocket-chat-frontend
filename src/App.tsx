@@ -10,7 +10,7 @@ export const App = () => {
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
-    const socketTemp = io('https://wschatserv.bieda.it');
+    const socketTemp = io('https://wschatserv.bieda.it', { transports: ['polling'] });
     setSocket(socketTemp);
 
     socketTemp.on('msgToClient', (messageTemp) => {
