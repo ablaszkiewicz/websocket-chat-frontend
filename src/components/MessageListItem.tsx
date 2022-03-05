@@ -24,19 +24,37 @@ export const MessageListItem = (props: Props) => {
         </Text>
       )}
 
-      <Box
-        key={props.message.user + props.message.message}
-        p={1}
-        px={2}
-        backgroundColor={isMyMessage ? 'blue.500' : 'gray.600'}
-        borderTopLeftRadius={props.isFirstMessage ? 5 : 2}
-        borderTopRightRadius={5}
-        borderBottomLeftRadius={props.isLastMessage ? 5 : 2}
-        borderBottomRightRadius={5}
-        maxW={'70%'}
-      >
-        <Text>{props.message.message}</Text>
-      </Box>
+      {!isMyMessage && (
+        <Box
+          key={props.message.user + props.message.message}
+          p={1}
+          px={2}
+          backgroundColor={isMyMessage ? 'blue.500' : 'gray.600'}
+          borderTopLeftRadius={props.isFirstMessage ? 5 : 2}
+          borderTopRightRadius={5}
+          borderBottomLeftRadius={props.isLastMessage ? 5 : 2}
+          borderBottomRightRadius={5}
+          maxW={'70%'}
+        >
+          <Text>{props.message.message}</Text>
+        </Box>
+      )}
+
+      {isMyMessage && (
+        <Box
+          key={props.message.user + props.message.message}
+          p={1}
+          px={2}
+          backgroundColor={isMyMessage ? 'blue.500' : 'gray.600'}
+          borderTopLeftRadius={5}
+          borderTopRightRadius={props.isFirstMessage ? 5 : 2}
+          borderBottomLeftRadius={5}
+          borderBottomRightRadius={props.isLastMessage ? 5 : 2}
+          maxW={'70%'}
+        >
+          <Text>{props.message.message}</Text>
+        </Box>
+      )}
     </VStack>
   );
 };
