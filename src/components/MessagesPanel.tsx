@@ -1,12 +1,10 @@
 import { Message, MessageListItem } from './MessageListItem';
 import { VStack, Box, Text } from '@chakra-ui/react';
 import React from 'react';
+import { useMessages } from '../hooks/useMessages';
 
-interface Props {
-  messages: Message[];
-}
-
-export function MessagesPanel(props: Props) {
+export function MessagesPanel() {
+  const { messages } = useMessages();
   return (
     <VStack
       w={'100%'}
@@ -17,7 +15,7 @@ export function MessagesPanel(props: Props) {
       overflowY={'scroll'}
       css={scrollbarStyle}
     >
-      {props.messages.map((message, i) => (
+      {messages.map((message, i) => (
         <MessageListItem message={message} key={i} />
       ))}
     </VStack>

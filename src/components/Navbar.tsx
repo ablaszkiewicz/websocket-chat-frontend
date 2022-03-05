@@ -4,7 +4,7 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 export const Navbar = () => {
   return (
     <Flex>
-      <Heading>Chat</Heading>
+      <Heading>Websocket chat</Heading>
       <Spacer />
       <ColorModeSwitcher justifySelf='flex-end' />
     </Flex>

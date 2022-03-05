@@ -1,18 +1,17 @@
 import { Flex, Input, Button } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import useGlobalKeyDown from 'react-global-key-down-hook';
+import { useMessages } from '../hooks/useMessages';
 import { Message } from './MessageListItem';
 
-interface Props {
-  sendMessage: (message: Message) => void;
-}
-
-export const InputPanel = (props: Props) => {
+export const InputPanel = () => {
   const [user, setUser] = useState('');
   const [message, setMessage] = useState('');
 
+  const { sendMessage } = useMessages();
+
   useGlobalKeyDown(() => {
-    props.sendMessage({ user: user, message: message });
+    sendMessage({ user: user, message: message });
   }, ['Enter']);
 
   return (
@@ -33,7 +32,7 @@ export const InputPanel = (props: Props) => {
         flexBasis={0}
         flexGrow={3}
       />
-      <Button ml={2} flexShrink={0} onClick={() => props.sendMessage({ user: user, message: message })}>
+      <Button ml={2} flexShrink={0} onClick={() => sendMessage({ user: user, message: message })}>
         Send
       </Button>
     </Flex>
