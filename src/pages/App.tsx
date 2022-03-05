@@ -16,12 +16,13 @@ export const App = () => {
         <VStack
           w={['100%', '80%', '60%', '40%']}
           h={'30em'}
-          borderWidth={'3px'}
           borderRadius={'5'}
           mx={'auto'}
           mt={10}
           p={2}
-          gap={1}
+          gap={0}
+          backgroundColor={'gray.700'}
+          shadow={'dark-lg'}
         >
           <MessagesPanel />
           <InputPanel />

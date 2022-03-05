@@ -23,16 +23,18 @@ export const InputPanel = () => {
         onChange={(e) => setUser(e.target.value)}
         flexBasis={0}
         flexGrow={1}
+        backgroundColor={'gray.800'}
       />
       <Input
         placeholder='Message...'
-        mr={2}
+        mr={1}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         flexBasis={0}
         flexGrow={3}
+        backgroundColor={'gray.800'}
       />
-      <Button ml={2} flexShrink={0} onClick={() => sendMessage({ user: user, message: message })}>
+      <Button ml={1} flexShrink={0} onClick={() => sendMessage({ user: user, message: message })} colorScheme={'blue'}>
         Send
       </Button>
     </Flex>

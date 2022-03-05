@@ -22,11 +22,10 @@ export const MessageListItem = (props: Props) => {
 
       <Box
         key={props.message.user + props.message.message}
-        w={'100%'}
-        borderWidth={'1px'}
         p={1}
+        px={2}
         borderRadius={'5'}
-        backgroundColor={'gray.900'}
+        backgroundColor={'gray.600'}
       >
         <Text>{props.message.message}</Text>
       </Box>

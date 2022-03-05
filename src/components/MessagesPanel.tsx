@@ -8,12 +8,13 @@ export function MessagesPanel() {
   return (
     <VStack
       w={'100%'}
-      borderWidth={'1px'}
       borderRadius={'5'}
       flexGrow={1}
       p={2}
       overflowY={'scroll'}
       css={scrollbarStyle}
+      backgroundColor={'gray.900'}
+      shadow={'inner'}
     >
       {messages.map((message, i) => (
         <MessageListItem
