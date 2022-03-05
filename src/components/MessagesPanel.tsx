@@ -15,12 +15,14 @@ export function MessagesPanel() {
       css={scrollbarStyle}
       backgroundColor={'gray.900'}
       shadow={'inner'}
+      spacing={1}
     >
       {messages.map((message, i) => (
         <MessageListItem
           message={message}
           key={i}
-          displayUser={i > 0 && messages[i - 1].user === message.user ? false : true}
+          isFirstMessage={i > 0 && messages[i - 1].user === message.user ? false : true}
+          isLastMessage={i < messages.length - 1 && messages[i + 1].user === message.user ? false : true}
         />
       ))}
     </VStack>
