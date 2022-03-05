@@ -12,6 +12,7 @@ export const InputPanel = () => {
 
   useGlobalKeyDown(() => {
     sendMessage({ user: user, message: message });
+    setMessage('');
   }, ['Enter']);
 
   return (
@@ -37,7 +38,10 @@ export const InputPanel = () => {
       <Button
         ml={1}
         flexShrink={0}
-        onClick={() => sendMessage({ user: user, message: message })}
+        onClick={() => {
+          sendMessage({ user: user, message: message });
+          setMessage('');
+        }}
         backgroundColor={'blue.500'}
       >
         Send
