@@ -16,7 +16,11 @@ export function MessagesPanel() {
       css={scrollbarStyle}
     >
       {messages.map((message, i) => (
-        <MessageListItem message={message} key={i} />
+        <MessageListItem
+          message={message}
+          key={i}
+          displayUser={i > 0 && messages[i - 1].user === message.user ? false : true}
+        />
       ))}
     </VStack>
   );
