@@ -6,6 +6,7 @@ import { useStore } from '../zustand/store';
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
   const socket: Socket = useStore((store) => store.socket) as any;
+  const setUsername = useStore((store) => store.setUsername);
 
   useEffect(() => {
     socket.on('msgToClient', (message: string) => {
@@ -19,6 +20,7 @@ export function useMessages() {
   };
 
   const sendMessage = (message: Message) => {
+    setUsername(message.user);
     socket.emit('msgToServer', JSON.stringify(message));
   };
 

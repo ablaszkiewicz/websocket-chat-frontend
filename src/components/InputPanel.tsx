@@ -34,7 +34,12 @@ export const InputPanel = () => {
         flexGrow={3}
         backgroundColor={'gray.800'}
       />
-      <Button ml={1} flexShrink={0} onClick={() => sendMessage({ user: user, message: message })} colorScheme={'blue'}>
+      <Button
+        ml={1}
+        flexShrink={0}
+        onClick={() => sendMessage({ user: user, message: message })}
+        backgroundColor={'blue.500'}
+      >
         Send
       </Button>
     </Flex>

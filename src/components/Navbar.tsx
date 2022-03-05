@@ -5,8 +5,6 @@ export const Navbar = () => {
   return (
     <Flex>
       <Heading>Websocket chat</Heading>
-      <Spacer />
-      <ColorModeSwitcher justifySelf='flex-end' />
     </Flex>
   );
 };

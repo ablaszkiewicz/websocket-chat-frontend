@@ -6,6 +6,8 @@ export const useStore = create(
   devtools((set: any) => ({
     //socket: io('http://localhost:3001', { transports: ['polling'] }),
     socket: io('https://wschatserv.bieda.it', { transports: ['polling'] }),
-    setSocket: (socket: any) => set((state: any) => ({ socket: socket })),
+    setSocket: (socket: any) => set((state: any) => (state.socket = socket)),
+    username: '',
+    setUsername: (username: any) => set((state: any) => (state.username = username)),
   }))
 );
