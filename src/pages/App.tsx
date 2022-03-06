@@ -3,8 +3,24 @@ import { MessagesPanel } from '../components/MessagesPanel';
 import { Navbar } from '../components/Navbar';
 import { ChakraProvider, Box, VStack } from '@chakra-ui/react';
 import theme from '../theme';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { baseUrl } from '..';
+import { useStore } from '../zustand/store';
 
 export const App = () => {
+  const setUsername = useStore((store) => store.setUsername);
+  const setToken = useStore((store) => store.setToken);
+
+  useEffect(() => {
+    login();
+  });
+
+  const login = async () => {
+    const response = await axios.post(`${baseUrl}/auth/login`, { username: 'Olucha', password: '123' });
+    setUsername(response.data.username);
+    setToken(response.data.token);
+  };
   return (
     <ChakraProvider theme={theme}>
       <Box p={5} minH='100vh'>

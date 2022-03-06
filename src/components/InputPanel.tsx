@@ -18,15 +18,6 @@ export const InputPanel = () => {
   return (
     <Flex w={'100%'}>
       <Input
-        placeholder='Name...'
-        mr={2}
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-        flexBasis={0}
-        flexGrow={1}
-        backgroundColor={'gray.800'}
-      />
-      <Input
         placeholder='Message...'
         mr={1}
         value={message}

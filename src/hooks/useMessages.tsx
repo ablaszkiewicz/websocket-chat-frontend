@@ -1,14 +1,31 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
+import { baseUrl } from '..';
 import { Message } from '../components/MessageListItem';
 import { useStore } from '../zustand/store';
 
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
   const socket: Socket = useStore((store) => store.socket) as any;
-  const setUsername = useStore((store) => store.setUsername);
+  const setSocket = useStore((store) => store.setSocket);
+  const username = useStore((store) => store.username);
+  const token = useStore((store) => store.token);
 
   useEffect(() => {
+    if (!token || socket) return;
+
+    setSocket(
+      io('http://localhost:3001', {
+        transports: ['polling'],
+        transportOptions: { polling: { extraHeaders: { Authorization: token } } },
+      })
+    );
+  }, [token]);
+
+  useEffect(() => {
+    if (!socket) return;
+
     socket.on('msgToClient', (message: string) => {
       onGetMessage(message);
     });
@@ -27,7 +44,7 @@ export function useMessages() {
   };
 
   const sendMessage = (message: Message) => {
-    setUsername(message.user);
+    message.user = username;
     socket.emit('msgToServer', JSON.stringify(message));
   };
 
