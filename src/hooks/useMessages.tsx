@@ -12,7 +12,14 @@ export function useMessages() {
     socket.on('msgToClient', (message: string) => {
       onGetMessage(message);
     });
+    socket.on('unauthorized', (message: string) => {
+      onUnauthorized();
+    });
   }, [socket]);
+
+  const onUnauthorized = () => {
+    console.log('Failed to estabilish websocket connection. Invalid JWT token.');
+  };
 
   const onGetMessage = (message: string) => {
     const messageObject: Message = JSON.parse(message);
