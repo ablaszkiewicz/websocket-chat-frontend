@@ -1,4 +1,5 @@
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { AttachmentIcon } from '@chakra-ui/icons';
+import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { useStore } from '../zustand/store';
 
@@ -58,3 +59,12 @@ export const MessageListItem = (props: Props) => {
     </VStack>
   );
 };
+
+{
+  /* <Text>
+  <Center w={'3em'} h={'3em'} backgroundColor={'blue.300'} borderRadius={5} mt={1}>
+    <AttachmentIcon mx={'auto'} />
+  </Center>
+  <Text fontSize={'xs'}>plik.zipplik.zipplik.zip</Text>
+</Text>; */
+}
