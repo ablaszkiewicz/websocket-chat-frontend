@@ -2,6 +2,7 @@ import { Message, MessageListItem } from './MessageListItem';
 import { VStack, Box, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useMessages } from '../hooks/useMessages';
+import { SystemMessageListItem } from './SystemMessageListItem';
 
 export function MessagesPanel() {
   const { messages } = useMessages();
@@ -17,14 +18,19 @@ export function MessagesPanel() {
       shadow={'inner'}
       spacing={1}
     >
-      {messages.map((message, i) => (
-        <MessageListItem
-          message={message}
-          key={i}
-          isFirstMessage={i > 0 && messages[i - 1].user === message.user ? false : true}
-          isLastMessage={i < messages.length - 1 && messages[i + 1].user === message.user ? false : true}
-        />
-      ))}
+      {messages.map((message, i) => {
+        if (message.type && message.type === 'system')
+          return <SystemMessageListItem key={i} message={message.message} />;
+        else
+          return (
+            <MessageListItem
+              message={message}
+              key={i}
+              isFirstMessage={i > 0 && messages[i - 1].user === message.user ? false : true}
+              isLastMessage={i < messages.length - 1 && messages[i + 1].user === message.user ? false : true}
+            />
+          );
+      })}
     </VStack>
   );
 }

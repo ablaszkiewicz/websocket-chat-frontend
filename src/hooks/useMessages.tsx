@@ -24,6 +24,13 @@ export function useMessages() {
   }, [token]);
 
   useEffect(() => {
+    if (!username) return;
+
+    const message: Message = { type: 'system', message: `Połączono jako ${username}`, user: 'system' };
+    setMessages((old) => [...old, message]);
+  }, [username]);
+
+  useEffect(() => {
     if (!socket) return;
 
     socket.on('msgToClient', (message: string) => {

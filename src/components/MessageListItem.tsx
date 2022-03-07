@@ -4,6 +4,7 @@ import React from 'react';
 import { useStore } from '../zustand/store';
 
 export interface Message {
+  type?: string;
   user: string;
   message: string;
 }
