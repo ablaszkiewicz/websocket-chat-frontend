@@ -1,7 +1,7 @@
 import { Flex, Input, Button } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import useGlobalKeyDown from 'react-global-key-down-hook';
-import { useMessages } from '../hooks/useMessages';
+import { useMessages } from '../../hooks/useMessages';
 import { Message } from './MessageListItem';
 
 export const InputPanel = () => {
@@ -33,7 +33,7 @@ export const InputPanel = () => {
           sendMessage({ user: user, message: message });
           setMessage('');
         }}
-        backgroundColor={'blue.500'}
+        colorScheme={'cyan'}
       >
         Send
       </Button>

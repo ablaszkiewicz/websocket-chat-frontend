@@ -1,7 +1,7 @@
 import { Message, MessageListItem } from './MessageListItem';
 import { VStack, Box, Text } from '@chakra-ui/react';
 import React from 'react';
-import { useMessages } from '../hooks/useMessages';
+import { useMessages } from '../../hooks/useMessages';
 import { SystemMessageListItem } from './SystemMessageListItem';
 
 export function MessagesPanel() {

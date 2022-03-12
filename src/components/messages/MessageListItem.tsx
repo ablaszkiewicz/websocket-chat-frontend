@@ -1,7 +1,7 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
-import { useStore } from '../zustand/store';
+import { useStore } from '../../zustand/store';
 
 export interface Message {
   type?: string;

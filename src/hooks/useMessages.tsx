@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { baseUrl } from '..';
-import { Message } from '../components/MessageListItem';
+import { Message } from '../components/messages/MessageListItem';
 import { useStore } from '../zustand/store';
 
 export function useMessages() {
@@ -16,7 +16,7 @@ export function useMessages() {
     if (!token || socket) return;
 
     setSocket(
-      io('http://localhost:3001', {
+      io(baseUrl, {
         transports: ['polling'],
         transportOptions: { polling: { extraHeaders: { Authorization: token } } },
       })
@@ -26,7 +26,7 @@ export function useMessages() {
   useEffect(() => {
     if (!username) return;
 
-    const message: Message = { type: 'system', message: `Połączono jako ${username}`, user: 'system' };
+    const message: Message = { type: 'system', message: `Connected as ${username}`, user: 'system' };
     setMessages((old) => [...old, message]);
   }, [username]);
 

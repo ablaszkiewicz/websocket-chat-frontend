@@ -1,12 +1,13 @@
-import { InputPanel } from '../components/InputPanel';
-import { MessagesPanel } from '../components/MessagesPanel';
+import { InputPanel } from '../components/messages/InputPanel';
+import { MessagesPanel } from '../components/messages/MessagesPanel';
 import { Navbar } from '../components/Navbar';
-import { ChakraProvider, Box, VStack } from '@chakra-ui/react';
+import { ChakraProvider, Box, VStack, HStack } from '@chakra-ui/react';
 import theme from '../theme';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { baseUrl } from '..';
 import { useStore } from '../zustand/store';
+import { RoomsPanel } from '../components/rooms/RoomsPanel';
 
 export const App = () => {
   const setUsername = useStore((store) => store.setUsername);
@@ -26,7 +27,7 @@ export const App = () => {
       <Box p={5} minH='100vh'>
         <Navbar />
 
-        <VStack
+        <HStack
           w={['100%', '80%', '60%', '40%']}
           h={'60vh'}
           borderRadius={'5'}
@@ -37,9 +38,14 @@ export const App = () => {
           backgroundColor={'gray.700'}
           shadow={'dark-lg'}
         >
-          <MessagesPanel />
-          <InputPanel />
-        </VStack>
+          <VStack w={'30%'} h={'100%'}>
+            <RoomsPanel />
+          </VStack>
+          <VStack w={'70%'} h={'100%'}>
+            <MessagesPanel />
+            <InputPanel />
+          </VStack>
+        </HStack>
       </Box>
     </ChakraProvider>
   );
