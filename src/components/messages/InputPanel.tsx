@@ -5,13 +5,12 @@ import { useMessages } from '../../hooks/useMessages';
 import { Message } from './MessageListItem';
 
 export const InputPanel = () => {
-  const [user, setUser] = useState('');
   const [message, setMessage] = useState('');
 
   const { sendMessage } = useMessages();
 
   useGlobalKeyDown(() => {
-    sendMessage({ user: user, message: message });
+    sendMessage(message);
     setMessage('');
   }, ['Enter']);
 
@@ -30,7 +29,7 @@ export const InputPanel = () => {
         ml={1}
         flexShrink={0}
         onClick={() => {
-          sendMessage({ user: user, message: message });
+          sendMessage(message);
           setMessage('');
         }}
         colorScheme={'cyan'}

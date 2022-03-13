@@ -8,19 +8,23 @@ import axios from 'axios';
 import { baseUrl } from '..';
 import { useStore } from '../zustand/store';
 import { RoomsPanel } from '../components/rooms/RoomsPanel';
+import { SettingsHeader } from '../components/messages/SettingsHeader';
+import { useMessages } from '../hooks/useMessages';
 
 export const App = () => {
   const setUsername = useStore((store) => store.setUsername);
   const setToken = useStore((store) => store.setToken);
+  const { sendSystemMessage } = useMessages({ isMaster: true });
 
   useEffect(() => {
     login();
-  });
+  }, []);
 
   const login = async () => {
     const response = await axios.post(`${baseUrl}/auth/guest`);
     setUsername(response.data.username);
     setToken(response.data.token);
+    sendSystemMessage({ type: 'system', message: `Connected as ${response.data.username}`, user: 'system' });
   };
   return (
     <ChakraProvider theme={theme}>
@@ -28,8 +32,8 @@ export const App = () => {
         <Navbar />
 
         <HStack
-          w={['100%', '80%', '60%', '40%']}
-          h={'60vh'}
+          w={['100%', '80%', '60%', '50%']}
+          h={'70vh'}
           borderRadius={'5'}
           mx={'auto'}
           mt={10}
@@ -40,6 +44,7 @@ export const App = () => {
         >
           <VStack w={'30%'} h={'100%'}>
             <RoomsPanel />
+            <SettingsHeader />
           </VStack>
           <VStack w={'70%'} h={'100%'}>
             <MessagesPanel />
