@@ -11,6 +11,8 @@ export const SettingsHeader = () => {
   const [showSkeleton, setShowSkeleton] = useState(true);
 
   useEffect(() => {
+    if (!username) return;
+
     setTimeout(() => {
       setShowSkeleton(false);
     }, 500);
@@ -19,7 +21,7 @@ export const SettingsHeader = () => {
   return (
     <>
       <SettingsModal isOpen={isOpen} onClose={onClose} />
-      <Flex w={'100%'} p={2} backgroundColor={'gray.800'} borderRadius={5}>
+      <Flex w={'100%'} p={2} backgroundColor={'gray.800'} borderRadius={5} shadow={'inner'}>
         <VStack align={'baseline'} spacing={0}>
           <Skeleton isLoaded={!showSkeleton} mb={1}>
             <Text>{username ? username : 'placeholder'}</Text>
