@@ -8,7 +8,7 @@ import axios from 'axios';
 import { baseUrl } from '..';
 import { useStore } from '../zustand/store';
 import { RoomsPanel } from '../components/rooms/RoomsPanel';
-import { SettingsHeader } from '../components/messages/SettingsHeader';
+import { SettingsHeader } from '../components/rooms/SettingsHeader';
 import { useMessages } from '../hooks/useMessages';
 
 export const App = () => {
