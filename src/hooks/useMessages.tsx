@@ -32,7 +32,7 @@ export function useMessages({ isMaster = false }: Props = {}) {
   useEffect(() => {
     if (!socket || !isMaster) return;
 
-    socket.on('msgToClient', (message: string) => {
+    socket.on('msgToClient', (message: Message) => {
       onGetMessage(message);
     });
     socket.on('systemMsgToClient', (message: string) => {
@@ -51,14 +51,13 @@ export function useMessages({ isMaster = false }: Props = {}) {
     console.log('Failed to estabilish websocket connection. Invalid JWT token.');
   };
 
-  const onGetMessage = (messageString: string) => {
-    const message: Message = JSON.parse(messageString);
-    addMessage(message);
+  const onGetMessage = (messageString: Message) => {
+    addMessage(messageString);
   };
 
   const sendMessage = (messageText: string) => {
     const message: Message = { user: username, message: messageText };
-    socket.emit('msgToServer', JSON.stringify(message));
+    socket.emit('msgToServer', message);
   };
 
   const sendSystemMessage = (messageText: string) => {
