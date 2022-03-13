@@ -13,7 +13,7 @@ interface Props {
 export function useMessages({ isMaster = false }: Props = {}) {
   const messages = useStore((store) => store.messages);
   const addMessage = useStore((store) => store.addMessage);
-  const socket: Socket = useStore((store) => store.socket) as any;
+  const socket: Socket = useStore((store) => store.socket);
   const setSocket = useStore((store) => store.setSocket);
   const username = useStore((store) => store.username);
   const token = useStore((store) => store.token);
@@ -35,7 +35,10 @@ export function useMessages({ isMaster = false }: Props = {}) {
     socket.on('msgToClient', (message: string) => {
       onGetMessage(message);
     });
-    socket.on('unauthorized', (message: string) => {
+    socket.on('systemMsgToClient', (message: string) => {
+      sendSystemMessage(message);
+    });
+    socket.on('unauthorized', () => {
       onUnauthorized();
     });
 
@@ -58,7 +61,8 @@ export function useMessages({ isMaster = false }: Props = {}) {
     socket.emit('msgToServer', JSON.stringify(message));
   };
 
-  const sendSystemMessage = (message: Message) => {
+  const sendSystemMessage = (messageText: string) => {
+    const message: Message = { type: 'system', message: messageText, user: 'system' };
     addMessage(message);
   };
 

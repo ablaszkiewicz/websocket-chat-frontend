@@ -24,7 +24,7 @@ export const App = () => {
     const response = await axios.post(`${baseUrl}/auth/guest`);
     setUsername(response.data.username);
     setToken(response.data.token);
-    sendSystemMessage({ type: 'system', message: `Connected as ${response.data.username}`, user: 'system' });
+    sendSystemMessage(`Connected as ${response.data.username}`);
   };
   return (
     <ChakraProvider theme={theme}>
