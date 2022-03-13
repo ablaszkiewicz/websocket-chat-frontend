@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/websocket-chat-frontend/static/js/main.3e407515.js",
+    "main.js": "/websocket-chat-frontend/static/js/main.f277fae8.js",
     "index.html": "/websocket-chat-frontend/index.html",
-    "main.3e407515.js.map": "/websocket-chat-frontend/static/js/main.3e407515.js.map"
+    "main.f277fae8.js.map": "/websocket-chat-frontend/static/js/main.f277fae8.js.map"
   },
   "entrypoints": [
-    "static/js/main.3e407515.js"
+    "static/js/main.f277fae8.js"
   ]
 }
