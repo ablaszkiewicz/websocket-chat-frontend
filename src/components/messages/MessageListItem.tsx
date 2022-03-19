@@ -21,7 +21,7 @@ export const MessageListItem = (props: Props) => {
   return (
     <VStack w={'100%'} align={isMyMessage ? 'end' : 'baseline'} spacing={0}>
       {props.isFirstMessage && (
-        <Text pl={1} fontSize={'xs'}>
+        <Text pl={1} fontSize={'xs'} mb={0.5}>
           {props.message.user}
         </Text>
       )}
