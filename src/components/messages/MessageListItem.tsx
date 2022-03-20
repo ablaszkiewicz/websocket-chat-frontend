@@ -18,8 +18,14 @@ interface Props {
 export const MessageListItem = (props: Props) => {
   const isMyMessage = props.message.user === useStore((store) => store.username);
 
+  const vStackCSS = {
+    display: '-webkit-box',
+    '-webkit-box-orient': 'vertical',
+    '-webkit-box-align': isMyMessage ? 'end' : 'start',
+  };
+
   return (
-    <VStack w={'100%'} align={isMyMessage ? 'end' : 'baseline'} spacing={0}>
+    <VStack w={'100%'} css={vStackCSS} spacing={0}>
       {props.isFirstMessage && (
         <Text pl={1} fontSize={'xs'} mb={0.5}>
           {props.message.user}
