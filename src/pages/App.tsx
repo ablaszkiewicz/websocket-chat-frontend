@@ -1,7 +1,7 @@
 import { InputPanel } from '../components/messages/InputPanel';
 import { MessagesPanel } from '../components/messages/MessagesPanel';
 import { Navbar } from '../components/Navbar';
-import { ChakraProvider, Box, VStack, HStack } from '@chakra-ui/react';
+import { ChakraProvider, Box, VStack, HStack, Flex } from '@chakra-ui/react';
 import theme from '../theme';
 import { useEffect } from 'react';
 import axios from 'axios';
@@ -28,30 +28,32 @@ export const App = () => {
   };
   return (
     <ChakraProvider theme={theme}>
-      <Box p={5} minH='100vh'>
+      <Flex p={[1, 1, 5]} h={'100vh'} direction={'column'}>
         <Navbar />
 
-        <HStack
-          w={['100%', '80%', '60%', '50%']}
-          h={'70vh'}
+        <Flex
+          w={['100%', '100%', '60%', '50%']}
           borderRadius={'5'}
           mx={'auto'}
           mt={10}
+          mb={[0, 0, 10]}
           p={2}
-          gap={0}
+          gap={2}
           backgroundColor={'gray.700'}
           shadow={'dark-lg'}
+          flexGrow={1}
+          direction={['column', 'column', 'row']}
         >
-          <VStack w={'30%'} h={'100%'}>
+          <VStack w={['100%', '100%', '30%']} h={['40%', '40%', '100%']} order={[1, 1, 0]}>
             <RoomsPanel />
             <SettingsHeader />
           </VStack>
-          <VStack w={'70%'} h={'100%'}>
+          <VStack w={['100%', '100%', '70%']} h={['60%', '60%', '100%']}>
             <MessagesPanel />
             <InputPanel />
           </VStack>
-        </HStack>
-      </Box>
+        </Flex>
+      </Flex>
     </ChakraProvider>
   );
 };
