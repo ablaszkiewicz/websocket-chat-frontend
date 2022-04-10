@@ -4,13 +4,16 @@ import React from 'react';
 import { useStore } from '../../zustand/store';
 
 export interface Message {
-  type?: string;
+  type: string;
   user: string;
+}
+
+export interface TextMessage extends Message {
   message: string;
 }
 
 interface Props {
-  message: Message;
+  message: TextMessage;
   isFirstMessage: boolean;
   isLastMessage: boolean;
 }

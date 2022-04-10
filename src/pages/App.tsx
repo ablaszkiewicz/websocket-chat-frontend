@@ -14,7 +14,7 @@ import { useMessages } from '../hooks/useMessages';
 export const App = () => {
   const setUsername = useStore((store) => store.setUsername);
   const setToken = useStore((store) => store.setToken);
-  const { sendSystemMessage } = useMessages({ isMaster: true });
+  const { onGetSystemMessage } = useMessages({ isMaster: true });
 
   useEffect(() => {
     login();
@@ -24,11 +24,11 @@ export const App = () => {
     const response = await axios.post(`${baseUrl}/auth/guest`);
     setUsername(response.data.username);
     setToken(response.data.token);
-    sendSystemMessage(`Connected as ${response.data.username}`);
+    onGetSystemMessage(`Connected as ${response.data.username}`);
   };
   return (
     <ChakraProvider theme={theme}>
-      <Flex p={[1, 1, 5]} h={'100vh'} direction={'column'}>
+      <Flex p={[1, 1, 5]} h={['80vh', '80vh', '100vh']} direction={'column'}>
         <Navbar />
 
         <Flex
@@ -43,12 +43,13 @@ export const App = () => {
           shadow={'dark-lg'}
           flexGrow={1}
           direction={['column', 'column', 'row']}
+          overflow='hidden'
         >
-          <VStack w={['100%', '100%', '30%']} h={['40%', '40%', '100%']} order={[1, 1, 0]}>
+          <VStack w={['100%', '100%', '30%']} h={['50%', '50%', '100%']} order={[0, 0, 0]}>
             <RoomsPanel />
             <SettingsHeader />
           </VStack>
-          <VStack w={['100%', '100%', '70%']} h={['60%', '60%', '100%']}>
+          <VStack w={['100%', '100%', '70%']} h={['50%', '50%', '100%']}>
             <MessagesPanel />
             <InputPanel />
           </VStack>

@@ -2,8 +2,10 @@ import { StatHelpText } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
+import { StringMappingType } from 'typescript';
 import { baseUrl } from '..';
-import { Message } from '../components/messages/MessageListItem';
+import { FileMessage } from '../components/messages/FileListItem';
+import { Message, TextMessage } from '../components/messages/MessageListItem';
 import { useStore } from '../zustand/store';
 
 interface Props {
@@ -36,7 +38,12 @@ export function useMessages({ isMaster = false }: Props = {}) {
       onGetMessage(message);
     });
     socket.on('systemMsgToClient', (message: string) => {
-      sendSystemMessage(message);
+      onGetSystemMessage(message);
+    });
+    socket.on('fileToClient', (file: FileMessage) => {
+      console.log('got file!');
+      console.log(file);
+      onGetFile(file);
     });
     socket.on('unauthorized', () => {
       onUnauthorized();
@@ -56,14 +63,31 @@ export function useMessages({ isMaster = false }: Props = {}) {
   };
 
   const sendMessage = (messageText: string) => {
-    const message: Message = { user: username, message: messageText };
+    const message: TextMessage = { type: 'text-message', user: username, message: messageText };
     socket.emit('msgToServer', message);
   };
 
-  const sendSystemMessage = (messageText: string) => {
-    const message: Message = { type: 'system', message: messageText, user: 'system' };
+  const onGetSystemMessage = (messageText: string) => {
+    const message: TextMessage = { type: 'system', message: messageText, user: 'system' };
     addMessage(message);
   };
 
-  return { messages, sendMessage, sendSystemMessage };
+  const onGetFile = (fileMessage: FileMessage) => {
+    addMessage(fileMessage);
+  };
+
+  const sendFile = (buffer: Uint8Array, name: string, extension: string, mimeType: string) => {
+    const fileMessage: FileMessage = {
+      type: 'file-message',
+      user: username,
+      name: name,
+      extension: extension,
+      size: buffer.length,
+      content: buffer,
+      mimeType: mimeType,
+    };
+    socket.emit('fileToServer', fileMessage);
+  };
+
+  return { messages, sendMessage, onGetSystemMessage, sendFile };
 }
