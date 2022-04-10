@@ -41,8 +41,6 @@ export function useMessages({ isMaster = false }: Props = {}) {
       onGetSystemMessage(message);
     });
     socket.on('fileToClient', (file: FileMessage) => {
-      console.log('got file!');
-      console.log(file);
       onGetFile(file);
     });
     socket.on('unauthorized', () => {
@@ -76,7 +74,7 @@ export function useMessages({ isMaster = false }: Props = {}) {
     addMessage(fileMessage);
   };
 
-  const sendFile = (buffer: Uint8Array, name: string, extension: string, mimeType: string) => {
+  const sendFile = (buffer: string | Uint8Array, name: string, extension: string, mimeType: string) => {
     const fileMessage: FileMessage = {
       type: 'file-message',
       user: username,

@@ -23,11 +23,10 @@ export const InputPanel = () => {
     const mimeType = file.type;
     const reader = new FileReader();
 
-    reader.readAsArrayBuffer(file);
+    reader.readAsBinaryString(file);
     reader.onload = () => {
-      const buffer = new Uint8Array(reader.result as ArrayBuffer);
-      console.log(buffer);
-      sendFile(buffer, name, extension, mimeType);
+      console.log('Sending file: ', new TextEncoder().encode(reader.result as string).length);
+      sendFile(reader.result as string, name, extension, mimeType);
     };
   };
 

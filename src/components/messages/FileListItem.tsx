@@ -8,7 +8,7 @@ export interface FileMessage extends Message {
   name: string;
   size: number;
   extension: string;
-  content: Uint8Array;
+  content: string | Uint8Array;
   mimeType: string;
 }
 
@@ -30,9 +30,9 @@ export const FileListItem = (props: Props) => {
 
   useEffect(() => {
     console.log('Got file!');
-    const blob = new Blob([props.file.content], { type: props.file.mimeType });
-    setBlob(blob);
-    console.log(URL.createObjectURL(blob));
+    const buffer = Uint8Array.from(props.file.content as string, (x) => x.charCodeAt(0));
+    const blobTemp = new Blob([buffer], { type: props.file.mimeType });
+    setBlob(blobTemp);
   }, []);
 
   return (
