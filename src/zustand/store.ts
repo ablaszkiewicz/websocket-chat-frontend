@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import create, { GetState, SetState } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Message } from '../components/messages/MessageListItem';
+import { Message } from '../entities/Message';
 
 type Store = {
   socket: any;

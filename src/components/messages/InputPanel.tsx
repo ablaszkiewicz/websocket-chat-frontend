@@ -3,12 +3,12 @@ import { Flex, Input, Button, IconButton } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import useGlobalKeyDown from 'react-global-key-down-hook';
 import { useMessages } from '../../hooks/useMessages';
-import { Message } from './MessageListItem';
+import { splitStringIntoChunks } from '../../other/Splitter';
 
 export const InputPanel = () => {
   const [message, setMessage] = useState('');
 
-  const { sendMessage, sendFile } = useMessages();
+  const { sendMessage, sendFileMeta, sendFile } = useMessages();
   const fileInput = useRef(null);
 
   useGlobalKeyDown(() => {
@@ -16,7 +16,7 @@ export const InputPanel = () => {
     setMessage('');
   }, ['Enter']);
 
-  const uploadFile = (event: any) => {
+  const uploadFile = async (event: any) => {
     const file = event.target.files[0];
     const name = file.name.split('.')[0];
     const extension = file.name.split('.').pop();
@@ -24,11 +24,20 @@ export const InputPanel = () => {
     const reader = new FileReader();
 
     reader.readAsBinaryString(file);
-    reader.onload = () => {
-      console.log('Sending file: ', new TextEncoder().encode(reader.result as string).length);
-      sendFile(reader.result as string, name, extension, mimeType);
+
+    reader.onload = async () => {
+      const chunks = splitStringIntoChunks(reader.result as string, 100000);
+      sendFileMeta(name, extension, mimeType, chunks.length, 0);
+      for (let i = 0; i < chunks.length; i++) {
+        sendFile(chunks[i], name, extension, mimeType, chunks.length, i);
+        await sleep(20);
+      }
     };
   };
+
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   return (
     <Flex w={'100%'}>

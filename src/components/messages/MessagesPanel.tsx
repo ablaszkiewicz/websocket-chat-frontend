@@ -1,9 +1,11 @@
-import { Message, MessageListItem, TextMessage } from './MessageListItem';
+import { MessageListItem } from './MessageListItem';
 import { VStack, Box, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useMessages } from '../../hooks/useMessages';
 import { SystemMessageListItem } from './SystemMessageListItem';
-import { FileListItem, FileMessage } from './FileListItem';
+import { FileListItem } from './FileListItem';
+import { FileMessage } from '../../entities/FileMessage';
+import { TextMessage } from '../../entities/TextMessage';
 
 export function MessagesPanel() {
   const { messages } = useMessages();

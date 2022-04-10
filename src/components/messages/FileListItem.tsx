@@ -1,16 +1,8 @@
-import { AttachmentIcon } from '@chakra-ui/icons';
-import { AspectRatio, Box, Center, Flex, Image, Text, VStack } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { AspectRatio, Box, Center, Flex, Image, Progress, Text, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
+import { FileMessage } from '../../entities/FileMessage';
 import { useStore } from '../../zustand/store';
-import { Message } from './MessageListItem';
-
-export interface FileMessage extends Message {
-  name: string;
-  size: number;
-  extension: string;
-  content: string | Uint8Array;
-  mimeType: string;
-}
 
 interface Props {
   file: FileMessage;
@@ -19,8 +11,14 @@ interface Props {
 }
 
 export const FileListItem = (props: Props) => {
+  const [isImage, setIsImage] = useState<boolean>(false);
+  const [isVideo, setIsVideo] = useState<boolean>(false);
   const [blob, setBlob] = useState<Blob>();
+  const [downloadCompleted, setDownloadCompleted] = useState<boolean>(false);
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
+  const [content, setContent] = useState<string>('');
   const isMyMessage = props.file.user === useStore((store) => store.username);
+  const socket = useStore((store) => store.socket);
 
   const vStackCSS = {
     display: '-webkit-box',
@@ -29,11 +27,30 @@ export const FileListItem = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log('Got file!');
-    const buffer = Uint8Array.from(props.file.content as string, (x) => x.charCodeAt(0));
-    const blobTemp = new Blob([buffer], { type: props.file.mimeType });
-    setBlob(blobTemp);
+    socket.on('filePartToClient', (file: FileMessage) => {
+      setContent((oldContent) => oldContent + file.content);
+      setDownloadProgress((file.currentPart / file.partsCount) * 100);
+      if (file.currentPart === file.partsCount - 1) {
+        setDownloadCompleted(true);
+      }
+    });
   }, []);
+
+  useEffect(() => {
+    if (downloadCompleted) {
+      const buffer = Uint8Array.from(content as string, (x) => x.charCodeAt(0));
+      const blobTemp = new Blob([buffer], { type: props.file.mimeType });
+      setBlob(blobTemp);
+
+      if (props.file.mimeType.includes('image')) {
+        setIsImage(true);
+      }
+      if (props.file.mimeType.includes('video')) {
+        setIsVideo(true);
+      }
+      socket.off('filePartToClient');
+    }
+  }, [downloadCompleted]);
 
   return (
     <VStack w={'100%'} css={vStackCSS} spacing={0}>
@@ -78,9 +95,12 @@ export const FileListItem = (props: Props) => {
           maxW={'70%'}
         >
           <Flex backgroundColor={'blue.300'} borderRadius={5} mt={1}>
-            {blob && <Image src={URL.createObjectURL(blob)} />}
+            {blob && isImage && <Image src={URL.createObjectURL(blob)} />}
+            {blob && isVideo && (
+              <ReactPlayer height={'auto'} width={'auto'} url={URL.createObjectURL(blob)} playing controls />
+            )}
           </Flex>
-
+          {!downloadCompleted && <Progress value={downloadProgress} />}
           <Text fontSize={'xs'}>
             {props.file.name}.{props.file.extension}
           </Text>

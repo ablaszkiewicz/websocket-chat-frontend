@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { StringMappingType } from 'typescript';
 import { baseUrl } from '..';
-import { FileMessage } from '../components/messages/FileListItem';
-import { Message, TextMessage } from '../components/messages/MessageListItem';
+import { FileMessage } from '../entities/FileMessage';
+import { Message } from '../entities/Message';
+import { TextMessage } from '../entities/TextMessage';
 import { useStore } from '../zustand/store';
 
 interface Props {
@@ -34,13 +35,13 @@ export function useMessages({ isMaster = false }: Props = {}) {
   useEffect(() => {
     if (!socket || !isMaster) return;
 
-    socket.on('msgToClient', (message: Message) => {
+    socket.on('msgToClient', (message: TextMessage) => {
       onGetMessage(message);
     });
     socket.on('systemMsgToClient', (message: string) => {
       onGetSystemMessage(message);
     });
-    socket.on('fileToClient', (file: FileMessage) => {
+    socket.on('fileMetaToClient', (file: FileMessage) => {
       onGetFile(file);
     });
     socket.on('unauthorized', () => {
@@ -74,18 +75,41 @@ export function useMessages({ isMaster = false }: Props = {}) {
     addMessage(fileMessage);
   };
 
-  const sendFile = (buffer: string | Uint8Array, name: string, extension: string, mimeType: string) => {
+  const sendFileMeta = (name: string, extension: string, mimeType: string, partsCount: number, currentPart: number) => {
     const fileMessage: FileMessage = {
       type: 'file-message',
       user: username,
       name: name,
       extension: extension,
-      size: buffer.length,
-      content: buffer,
       mimeType: mimeType,
+      isMeta: true,
+      partsCount: partsCount,
+      currentPart: currentPart,
     };
-    socket.emit('fileToServer', fileMessage);
+    socket.emit('fileMetaToServer', fileMessage);
   };
 
-  return { messages, sendMessage, onGetSystemMessage, sendFile };
+  const sendFile = (
+    buffer: string,
+    name: string,
+    extension: string,
+    mimeType: string,
+    partsCount: number,
+    currentPart: number
+  ) => {
+    const fileMessage: FileMessage = {
+      type: 'file-message',
+      user: username,
+      name: name,
+      extension: extension,
+      content: buffer,
+      mimeType: mimeType,
+      isMeta: false,
+      partsCount: partsCount,
+      currentPart: currentPart,
+    };
+    socket.emit('filePartToServer', fileMessage);
+  };
+
+  return { messages, sendMessage, onGetSystemMessage, sendFile, sendFileMeta };
 }

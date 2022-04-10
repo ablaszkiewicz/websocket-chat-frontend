@@ -1,16 +1,8 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
+import { TextMessage } from '../../entities/TextMessage';
 import { useStore } from '../../zustand/store';
-
-export interface Message {
-  type: string;
-  user: string;
-}
-
-export interface TextMessage extends Message {
-  message: string;
-}
 
 interface Props {
   message: TextMessage;
