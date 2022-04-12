@@ -1,6 +1,8 @@
+import { AttachmentIcon } from '@chakra-ui/icons';
 import { AspectRatio, Box, Center, Flex, Image, Progress, Text, VStack } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
+import { Socket } from 'socket.io-client';
 import { FileMessage } from '../../entities/FileMessage';
 import { useStore } from '../../zustand/store';
 
@@ -27,6 +29,7 @@ export const FileListItem = (props: Props) => {
   };
 
   useEffect(() => {
+    console.log((socket as Socket).listenersAny());
     socket.on('filePartToClient', (file: FileMessage) => {
       setContent((oldContent) => oldContent + file.content);
       setDownloadProgress((file.currentPart / file.partsCount) * 100);
@@ -34,6 +37,8 @@ export const FileListItem = (props: Props) => {
         setDownloadCompleted(true);
       }
     });
+
+    return () => socket.off('filePartToClient');
   }, []);
 
   useEffect(() => {
@@ -73,8 +78,12 @@ export const FileListItem = (props: Props) => {
           maxW={'70%'}
         >
           <Flex backgroundColor={'blue.300'} borderRadius={5} mt={1}>
-            {blob && <Image src={URL.createObjectURL(blob)} />}
+            {blob && isImage && <Image src={URL.createObjectURL(blob)} />}
+            {blob && isVideo && (
+              <ReactPlayer height={'auto'} width={'auto'} url={URL.createObjectURL(blob)} playing controls />
+            )}
           </Flex>
+          {!downloadCompleted && <Progress value={downloadProgress} />}
 
           <Text fontSize={'xs'}>
             {props.file.name}.{props.file.extension}
@@ -98,6 +107,11 @@ export const FileListItem = (props: Props) => {
             {blob && isImage && <Image src={URL.createObjectURL(blob)} />}
             {blob && isVideo && (
               <ReactPlayer height={'auto'} width={'auto'} url={URL.createObjectURL(blob)} playing controls />
+            )}
+            {blob && !isImage && !isVideo && (
+              <Center w={'100%'} h={'3em'} backgroundColor={'blue.300'} borderRadius={5} mt={1}>
+                <AttachmentIcon mx={'auto'} />
+              </Center>
             )}
           </Flex>
           {!downloadCompleted && <Progress value={downloadProgress} />}

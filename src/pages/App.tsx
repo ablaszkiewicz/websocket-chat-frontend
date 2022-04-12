@@ -22,6 +22,7 @@ export const App = () => {
 
   const login = async () => {
     const response = await axios.post(`${baseUrl}/auth/guest`);
+
     setUsername(response.data.username);
     setToken(response.data.token);
     onGetSystemMessage(`Connected as ${response.data.username}`);

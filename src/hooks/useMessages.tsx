@@ -24,16 +24,24 @@ export function useMessages({ isMaster = false }: Props = {}) {
   useEffect(() => {
     if (!token || socket || !isMaster) return;
 
+    console.log('Connecting to WSS');
+
     setSocket(
       io(baseUrl, {
-        transports: ['polling'],
-        transportOptions: { polling: { extraHeaders: { Authorization: token } } },
+        transports: ['websocket'],
+        transportOptions: {
+          websocket: { extraHeaders: { Authorization: token } },
+          polling: { extraHeaders: { Authorization: token } },
+        },
+        query: { token },
       })
     );
   }, [token]);
 
   useEffect(() => {
     if (!socket || !isMaster) return;
+
+    console.log('Connected to socket!');
 
     socket.on('msgToClient', (message: TextMessage) => {
       onGetMessage(message);
@@ -49,7 +57,11 @@ export function useMessages({ isMaster = false }: Props = {}) {
     });
 
     return () => {
+      console.log('Disconnected from socket!');
       socket.removeAllListeners();
+      socket.offAny();
+      socket.disconnect();
+      socket.close();
     };
   }, [socket]);
 

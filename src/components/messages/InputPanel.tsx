@@ -26,11 +26,11 @@ export const InputPanel = () => {
     reader.readAsBinaryString(file);
 
     reader.onload = async () => {
-      const chunks = splitStringIntoChunks(reader.result as string, 100000);
+      const chunks = splitStringIntoChunks(reader.result as string, 10240);
       sendFileMeta(name, extension, mimeType, chunks.length, 0);
       for (let i = 0; i < chunks.length; i++) {
+        //console.log('sending chunk', i);
         sendFile(chunks[i], name, extension, mimeType, chunks.length, i);
-        await sleep(20);
       }
     };
   };
