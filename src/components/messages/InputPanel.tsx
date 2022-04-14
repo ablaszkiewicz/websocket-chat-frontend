@@ -1,5 +1,6 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import { Flex, Input, Button, IconButton } from '@chakra-ui/react';
+import { AES } from 'crypto-js';
 import React, { useEffect, useRef, useState } from 'react';
 import useGlobalKeyDown from 'react-global-key-down-hook';
 import { useMessages } from '../../hooks/useMessages';
@@ -12,7 +13,8 @@ export const InputPanel = () => {
   const fileInput = useRef(null);
 
   useGlobalKeyDown(() => {
-    sendMessage(message);
+    const encrypted = AES.encrypt('asd', 'secret').toString();
+    sendMessage(encrypted);
     setMessage('');
   }, ['Enter']);
 
@@ -29,15 +31,10 @@ export const InputPanel = () => {
       const chunks = splitStringIntoChunks(reader.result as string, 10240);
       sendFileMeta(name, extension, mimeType, chunks.length, 0);
       for (let i = 0; i < chunks.length; i++) {
-        //console.log('sending chunk', i);
         sendFile(chunks[i], name, extension, mimeType, chunks.length, i);
       }
     };
   };
-
-  function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   return (
     <Flex w={'100%'}>
