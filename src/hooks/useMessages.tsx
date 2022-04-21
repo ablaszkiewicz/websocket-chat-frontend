@@ -1,10 +1,11 @@
 import { StatHelpText } from '@chakra-ui/react';
 import axios from 'axios';
+import { AES, enc } from 'crypto-js';
 import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { StringMappingType } from 'typescript';
 import { baseUrl } from '..';
-import { FileMessage } from '../entities/FileMessage';
+import { FileMetaMessage, FilePartMessage } from '../entities/FileMessage';
 import { Message } from '../entities/Message';
 import { TextMessage } from '../entities/TextMessage';
 import { useStore } from '../zustand/store';
@@ -43,13 +44,13 @@ export function useMessages({ isMaster = false }: Props = {}) {
 
     console.log('Connected to socket!');
 
-    socket.on('msgToClient', (message: TextMessage) => {
-      onGetMessage(message);
+    socket.on('msgToClient', (encryptedMessage: string) => {
+      onGetMessage(encryptedMessage);
     });
     socket.on('systemMsgToClient', (message: string) => {
       onGetSystemMessage(message);
     });
-    socket.on('fileMetaToClient', (file: FileMessage) => {
+    socket.on('fileMetaToClient', (file: FileMetaMessage) => {
       onGetFile(file);
     });
     socket.on('unauthorized', () => {
@@ -69,13 +70,18 @@ export function useMessages({ isMaster = false }: Props = {}) {
     console.log('Failed to estabilish websocket connection. Invalid JWT token.');
   };
 
-  const onGetMessage = (messageString: Message) => {
-    addMessage(messageString);
+  const onGetMessage = (encryptedMessage: string) => {
+    const decryptedBytes = AES.decrypt(encryptedMessage, 'secret');
+    const decryptedText = decryptedBytes.toString(enc.Utf8);
+    const message = JSON.parse(decryptedText) as Message;
+    addMessage(message);
   };
 
   const sendMessage = (messageText: string) => {
     const message: TextMessage = { type: 'text-message', user: username, message: messageText };
-    socket.emit('msgToServer', message);
+    const stringified = JSON.stringify(message);
+    const encrypted = AES.encrypt(stringified, 'secret').toString();
+    socket.emit('msgToServer', encrypted);
   };
 
   const onGetSystemMessage = (messageText: string) => {
@@ -83,44 +89,36 @@ export function useMessages({ isMaster = false }: Props = {}) {
     addMessage(message);
   };
 
-  const onGetFile = (fileMessage: FileMessage) => {
+  const onGetFile = (fileMessage: FileMetaMessage) => {
     addMessage(fileMessage);
   };
 
-  const sendFileMeta = (name: string, extension: string, mimeType: string, partsCount: number, currentPart: number) => {
-    const fileMessage: FileMessage = {
+  const sendFileMeta = (name: string, extension: string, mimeType: string, partsCount: number) => {
+    const fileMessage: FileMetaMessage = {
       type: 'file-message',
       user: username,
       name: name,
       extension: extension,
       mimeType: mimeType,
-      isMeta: true,
       partsCount: partsCount,
-      currentPart: currentPart,
     };
+
     socket.emit('fileMetaToServer', fileMessage);
   };
 
-  const sendFile = (
-    buffer: string,
-    name: string,
-    extension: string,
-    mimeType: string,
-    partsCount: number,
-    currentPart: number
-  ) => {
-    const fileMessage: FileMessage = {
+  const sendFile = (buffer: string, name: string, currentPart: number) => {
+    const fileMessage: FilePartMessage = {
       type: 'file-message',
       user: username,
       name: name,
-      extension: extension,
       content: buffer,
-      mimeType: mimeType,
-      isMeta: false,
-      partsCount: partsCount,
       currentPart: currentPart,
     };
-    socket.emit('filePartToServer', fileMessage);
+
+    const stringified = JSON.stringify(fileMessage);
+    const encrypted = AES.encrypt(stringified, 'secret').toString();
+
+    socket.emit('filePartToServer', encrypted);
   };
 
   return { messages, sendMessage, onGetSystemMessage, sendFile, sendFileMeta };

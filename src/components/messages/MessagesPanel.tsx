@@ -4,7 +4,7 @@ import React from 'react';
 import { useMessages } from '../../hooks/useMessages';
 import { SystemMessageListItem } from './SystemMessageListItem';
 import { FileListItem } from './FileListItem';
-import { FileMessage } from '../../entities/FileMessage';
+import { FileMetaMessage, FilePartMessage } from '../../entities/FileMessage';
 import { TextMessage } from '../../entities/TextMessage';
 
 export function MessagesPanel() {
@@ -27,7 +27,7 @@ export function MessagesPanel() {
         if (message.type && message.type === 'file-message')
           return (
             <FileListItem
-              file={message as FileMessage}
+              file={message as FileMetaMessage}
               key={i}
               isFirstMessage={i > 0 && messages[i - 1].user === message.user ? false : true}
               isLastMessage={i < messages.length - 1 && messages[i + 1].user === message.user ? false : true}

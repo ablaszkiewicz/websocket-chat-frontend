@@ -4,6 +4,7 @@ import { AES } from 'crypto-js';
 import React, { useEffect, useRef, useState } from 'react';
 import useGlobalKeyDown from 'react-global-key-down-hook';
 import { useMessages } from '../../hooks/useMessages';
+import { readFile } from '../../other/FileUploader';
 import { splitStringIntoChunks } from '../../other/Splitter';
 
 export const InputPanel = () => {
@@ -13,8 +14,7 @@ export const InputPanel = () => {
   const fileInput = useRef(null);
 
   useGlobalKeyDown(() => {
-    const encrypted = AES.encrypt('asd', 'secret').toString();
-    sendMessage(encrypted);
+    sendMessage(message);
     setMessage('');
   }, ['Enter']);
 
@@ -23,17 +23,14 @@ export const InputPanel = () => {
     const name = file.name.split('.')[0];
     const extension = file.name.split('.').pop();
     const mimeType = file.type;
-    const reader = new FileReader();
 
-    reader.readAsBinaryString(file);
+    const chunks = await readFile(file);
 
-    reader.onload = async () => {
-      const chunks = splitStringIntoChunks(reader.result as string, 10240);
-      sendFileMeta(name, extension, mimeType, chunks.length, 0);
-      for (let i = 0; i < chunks.length; i++) {
-        sendFile(chunks[i], name, extension, mimeType, chunks.length, i);
-      }
-    };
+    sendFileMeta(name, extension, mimeType, chunks.length);
+
+    for (let i = 0; i < chunks.length; i++) {
+      sendFile(chunks[i], name, i);
+    }
   };
 
   return (

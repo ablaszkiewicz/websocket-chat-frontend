@@ -1,11 +1,14 @@
 import { Message } from './Message';
 
-export interface FileMessage extends Message {
+export interface FilePartMessage extends Message {
+  name: string;
+  content?: string;
+  currentPart: number;
+}
+
+export interface FileMetaMessage extends Message {
   name: string;
   extension: string;
-  content?: string;
   mimeType: string;
-  isMeta: boolean;
   partsCount: number;
-  currentPart: number;
 }

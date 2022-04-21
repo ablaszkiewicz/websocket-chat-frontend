@@ -1,13 +1,14 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import { AspectRatio, Box, Center, Flex, Image, Progress, Text, VStack } from '@chakra-ui/react';
+import { AES, enc } from 'crypto-js';
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Socket } from 'socket.io-client';
-import { FileMessage } from '../../entities/FileMessage';
+import { FileMetaMessage, FilePartMessage } from '../../entities/FileMessage';
 import { useStore } from '../../zustand/store';
 
 interface Props {
-  file: FileMessage;
+  file: FileMetaMessage;
   isFirstMessage: boolean;
   isLastMessage: boolean;
 }
@@ -29,11 +30,14 @@ export const FileListItem = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log((socket as Socket).listenersAny());
-    socket.on('filePartToClient', (file: FileMessage) => {
+    socket.on('filePartToClient', (filePart: string) => {
+      const decryptedBytes = AES.decrypt(filePart, 'secret');
+      const decryptedText = decryptedBytes.toString(enc.Utf8);
+      const file = JSON.parse(decryptedText) as FilePartMessage;
+
       setContent((oldContent) => oldContent + file.content);
-      setDownloadProgress((file.currentPart / file.partsCount) * 100);
-      if (file.currentPart === file.partsCount - 1) {
+      setDownloadProgress((file.currentPart / props.file.partsCount) * 100);
+      if (file.currentPart === props.file.partsCount - 1) {
         setDownloadCompleted(true);
       }
     });
@@ -43,7 +47,7 @@ export const FileListItem = (props: Props) => {
 
   useEffect(() => {
     if (downloadCompleted) {
-      const buffer = Uint8Array.from(content as string, (x) => x.charCodeAt(0));
+      const buffer = Uint8Array.from(content, (x) => x.charCodeAt(0));
       const blobTemp = new Blob([buffer], { type: props.file.mimeType });
       setBlob(blobTemp);
 
@@ -123,6 +127,3 @@ export const FileListItem = (props: Props) => {
     </VStack>
   );
 };
-
-{
-}
