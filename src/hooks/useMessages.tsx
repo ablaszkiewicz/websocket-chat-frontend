@@ -23,9 +23,11 @@ export function useMessages({ isMaster = false }: Props = {}) {
   const token = useStore((store) => store.token);
 
   useEffect(() => {
-    if (!token || socket || !isMaster) return;
+    if (!token || !isMaster) return;
 
-    console.log('Connecting to WSS');
+    if (socket) {
+      socket.disconnect();
+    }
 
     setSocket(
       io(baseUrl, {
@@ -42,7 +44,7 @@ export function useMessages({ isMaster = false }: Props = {}) {
   useEffect(() => {
     if (!socket || !isMaster) return;
 
-    console.log('Connected to socket!');
+    console.log('Connected!');
 
     socket.on('msgToClient', (encryptedMessage: string) => {
       onGetMessage(encryptedMessage);

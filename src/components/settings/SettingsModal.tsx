@@ -8,7 +8,12 @@ import {
   ModalFooter,
   Button,
   Text,
+  Input,
+  FormControl,
+  FormLabel,
 } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 
 interface Props {
   isOpen: boolean;
@@ -16,19 +21,44 @@ interface Props {
 }
 
 export const SettingsModal = (props: Props) => {
+  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+
+  const tryLogin = async () => {
+    setLoading(true);
+    const succeeded = await login(username, password);
+
+    setLoading(false);
+    if (succeeded) {
+      props.onClose();
+    }
+  };
+
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
       <ModalOverlay backdropFilter='auto' backdropBlur='2px' />
       <ModalContent>
-        <ModalHeader>Settings</ModalHeader>
+        <ModalHeader>Logowanie / rejestracja</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text>Halo</Text>
+          <FormControl mb={2}>
+            <FormLabel>Nazwa użytkownika</FormLabel>
+            <Input placeholder='Nazwa użytkownika...' value={username} onChange={(e) => setUsername(e.target.value)} />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Hasło</FormLabel>
+            <Input placeholder='Hasło...' value={password} onChange={(e) => setPassword(e.target.value)} />
+          </FormControl>
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={props.onClose}>
-            Close
+          <Button colorScheme='blue' disabled mr={3}>
+            Zarejestruj
+          </Button>
+          <Button colorScheme='blue' isLoading={loading} onClick={() => tryLogin()}>
+            Zaloguj
           </Button>
         </ModalFooter>
       </ModalContent>

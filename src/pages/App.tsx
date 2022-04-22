@@ -13,7 +13,8 @@ import { useMessages } from '../hooks/useMessages';
 import { useAuth } from '../hooks/useAuth';
 
 export const App = () => {
-  const { loginAsGuest, register, login } = useAuth();
+  const { loginAsGuest } = useAuth();
+  useMessages({ isMaster: true });
 
   useEffect(() => {
     loginAsGuest();
