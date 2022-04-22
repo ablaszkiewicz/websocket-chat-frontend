@@ -106,7 +106,7 @@ export function useMessages({ isMaster = false }: Props = {}) {
     socket.emit('fileMetaToServer', fileMessage);
   };
 
-  const sendFile = (buffer: string, name: string, currentPart: number) => {
+  const sendFilePart = (buffer: string, name: string, currentPart: number) => {
     const fileMessage: FilePartMessage = {
       type: 'file-message',
       user: username,
@@ -121,5 +121,5 @@ export function useMessages({ isMaster = false }: Props = {}) {
     socket.emit('filePartToServer', encrypted);
   };
 
-  return { messages, sendMessage, onGetSystemMessage, sendFile, sendFileMeta };
+  return { messages, sendMessage, onGetSystemMessage, sendFilePart, sendFileMeta };
 }

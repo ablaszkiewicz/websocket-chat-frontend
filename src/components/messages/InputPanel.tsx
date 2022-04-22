@@ -10,7 +10,7 @@ import { splitStringIntoChunks } from '../../other/Splitter';
 export const InputPanel = () => {
   const [message, setMessage] = useState('');
 
-  const { sendMessage, sendFileMeta, sendFile } = useMessages();
+  const { sendMessage, sendFileMeta, sendFilePart } = useMessages();
   const fileInput = useRef(null);
 
   useGlobalKeyDown(() => {
@@ -29,7 +29,7 @@ export const InputPanel = () => {
     sendFileMeta(name, extension, mimeType, chunks.length);
 
     for (let i = 0; i < chunks.length; i++) {
-      sendFile(chunks[i], name, i);
+      sendFilePart(chunks[i], name, i);
     }
   };
 
