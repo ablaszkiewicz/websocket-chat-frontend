@@ -10,23 +10,15 @@ import { useStore } from '../zustand/store';
 import { RoomsPanel } from '../components/rooms/RoomsPanel';
 import { SettingsHeader } from '../components/rooms/SettingsHeader';
 import { useMessages } from '../hooks/useMessages';
+import { useAuth } from '../hooks/useAuth';
 
 export const App = () => {
-  const setUsername = useStore((store) => store.setUsername);
-  const setToken = useStore((store) => store.setToken);
-  const { onGetSystemMessage } = useMessages({ isMaster: true });
+  const { loginAsGuest, register, login } = useAuth();
 
   useEffect(() => {
-    login();
+    loginAsGuest();
   }, []);
 
-  const login = async () => {
-    const response = await axios.post(`${baseUrl}/auth/guest`);
-
-    setUsername(response.data.username);
-    setToken(response.data.token);
-    onGetSystemMessage(`Connected as ${response.data.username}`);
-  };
   return (
     <ChakraProvider theme={theme}>
       <Flex p={[1, 1, 5]} h={['80vh', '80vh', '100vh']} direction={'column'}>

@@ -1,4 +1,5 @@
 import { ColorModeScript } from '@chakra-ui/react';
+import axios from 'axios';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './pages/App';
@@ -6,6 +7,8 @@ import * as serviceWorker from './serviceWorker';
 
 //export const baseUrl = 'http://localhost:3001';
 export const baseUrl = 'https://wschatserv.bieda.it';
+
+axios.defaults.baseURL = baseUrl;
 
 ReactDOM.render(
   <React.StrictMode>
