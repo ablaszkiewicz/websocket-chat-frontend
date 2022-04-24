@@ -15,10 +15,8 @@ export const RoomsPanel = () => {
       spacing={1}
       p={1}
     >
-      <RoomListItem />
-      <Button leftIcon={<AddIcon />} variant={'ghost'} w={'100%'}>
-        Add room
-      </Button>
+      <RoomListItem name={'CBC'} />
+      <RoomListItem name={'EBC'} />
     </VStack>
   );
 };

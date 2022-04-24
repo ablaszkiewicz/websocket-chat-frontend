@@ -8,6 +8,8 @@ type Store = {
   setSocket: any;
   username: string;
   setUsername: any;
+  isGuest: boolean;
+  setIsGuest: any;
   token: string;
   setToken: any;
   messages: Message[];
@@ -16,6 +18,8 @@ type Store = {
 
 export const useStore = create<Store>(
   devtools((set: SetState<Store>, get: GetState<Store>) => ({
+    isGuest: true,
+    setIsGuest: (isGuest: boolean) => set((state) => ({ ...state, isGuest })),
     socket: null,
     setSocket: (socket: any) => set((state: any) => (state.socket = socket)),
     username: '',

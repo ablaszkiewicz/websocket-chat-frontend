@@ -6,11 +6,13 @@ import { useMessages } from './useMessages';
 export function useAuth() {
   const setUsername = useStore((store) => store.setUsername);
   const setToken = useStore((store) => store.setToken);
+  const setIsGuest = useStore((store) => store.setIsGuest);
   const { onGetSystemMessage } = useMessages();
 
   const loginAsGuest = async () => {
     const response = await axios.post(`${baseUrl}/auth/guest`);
 
+    setIsGuest(true);
     setUsername(response.data.username);
     setToken(response.data.token);
     onGetSystemMessage(`Connected as ${response.data.username}`);
@@ -24,6 +26,7 @@ export function useAuth() {
     onGetSystemMessage(`Connected as ${response.data.username}`);
 
     if (response.status === 201) {
+      setIsGuest(false);
       return true;
     } else {
       return false;
@@ -34,7 +37,9 @@ export function useAuth() {
     const response = await axios.post('/users', { username, password });
 
     if (response.status == 201) {
-      login(username, password);
+      return true;
+    } else {
+      return false;
     }
   };
 
