@@ -14,7 +14,7 @@ export const RoomListItem = (props: Props) => {
       </VStack>
 
       <Spacer />
-      <IconButton aria-label='Join' icon={<ArrowForwardIcon />} h={'100%'} />
+      <IconButton disabled aria-label='Join' icon={<ArrowForwardIcon />} h={'100%'} />
     </Flex>
   );
 };
