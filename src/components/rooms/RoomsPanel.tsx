@@ -1,8 +1,10 @@
 import { AddIcon } from '@chakra-ui/icons';
-import { Button, Center, Flex, VStack } from '@chakra-ui/react';
+import { Button, Center, Flex, Text, VStack } from '@chakra-ui/react';
+import { useStore } from '../../zustand/store';
 import { RoomListItem } from './RoomListItem';
 
 export const RoomsPanel = () => {
+  const sessionKey = useStore((store) => store.sessionKey);
   return (
     <VStack
       w={'100%'}
@@ -17,6 +19,7 @@ export const RoomsPanel = () => {
     >
       <RoomListItem name={'CBC'} />
       <RoomListItem name={'EBC'} />
+      <Text>{sessionKey}</Text>
     </VStack>
   );
 };

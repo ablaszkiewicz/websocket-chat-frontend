@@ -14,12 +14,14 @@ type Store = {
   setToken: any;
   messages: Message[];
   addMessage: any;
+  sessionKey: string;
+  setSessionKey: any;
 };
 
 export const useStore = create<Store>(
   devtools((set: SetState<Store>, get: GetState<Store>) => ({
     isGuest: true,
-    setIsGuest: (isGuest: boolean) => set((state) => ({ ...state, isGuest })),
+    setIsGuest: (isGuest: any) => set((state: any) => (state.isGuest = isGuest)),
     socket: null,
     setSocket: (socket: any) => set((state: any) => (state.socket = socket)),
     username: '',
@@ -28,5 +30,7 @@ export const useStore = create<Store>(
     setToken: (token: any) => set((state: any) => (state.token = token)),
     messages: [],
     addMessage: (message: Message) => set((state: any) => ({ messages: [...state.messages, message] })),
+    sessionKey: '',
+    setSessionKey: (key: any) => set((state: any) => (state.sessionKey = key)),
   }))
 );

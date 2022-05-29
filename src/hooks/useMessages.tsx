@@ -21,6 +21,8 @@ export function useMessages({ isMaster = false }: Props = {}) {
   const setSocket = useStore((store) => store.setSocket);
   const username = useStore((store) => store.username);
   const token = useStore((store) => store.token);
+  const setSessionKey = useStore((store) => store.setSessionKey);
+  const sessionKey = useStore((store) => store.sessionKey);
 
   useEffect(() => {
     if (!token || !isMaster) return;
@@ -46,6 +48,28 @@ export function useMessages({ isMaster = false }: Props = {}) {
 
     console.log('Connected!');
 
+    socket.emit('requestKeyToServer');
+
+    socket.on('responseKeyToClient', (key: string) => {
+      if (key === '') {
+        setSessionKey('secret');
+      } else {
+        setSessionKey(key);
+      }
+    });
+
+    return () => {
+      console.log('Disconnected from socket!');
+      socket.removeAllListeners();
+      socket.offAny();
+      socket.disconnect();
+      socket.close();
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (!sessionKey || !isMaster) return;
+
     socket.on('msgToClient', (encryptedMessage: string) => {
       onGetMessage(encryptedMessage);
     });
@@ -58,31 +82,25 @@ export function useMessages({ isMaster = false }: Props = {}) {
     socket.on('unauthorized', () => {
       onUnauthorized();
     });
-
-    return () => {
-      console.log('Disconnected from socket!');
-      socket.removeAllListeners();
-      socket.offAny();
-      socket.disconnect();
-      socket.close();
-    };
-  }, [socket]);
+  }, [sessionKey]);
 
   const onUnauthorized = () => {
     console.log('Failed to estabilish websocket connection. Invalid JWT token.');
   };
 
   const onGetMessage = (encryptedMessage: string) => {
-    const decryptedBytes = AES.decrypt(encryptedMessage, 'secret');
+    console.log('Got message!');
+    const decryptedBytes = AES.decrypt(encryptedMessage, sessionKey);
     const decryptedText = decryptedBytes.toString(enc.Utf8);
     const message = JSON.parse(decryptedText) as Message;
     addMessage(message);
   };
 
   const sendMessage = (messageText: string) => {
+    console.log('Sending!');
     const message: TextMessage = { type: 'text-message', user: username, message: messageText };
     const stringified = JSON.stringify(message);
-    const encrypted = AES.encrypt(stringified, 'secret').toString();
+    const encrypted = AES.encrypt(stringified, sessionKey).toString();
     socket.emit('msgToServer', encrypted);
   };
 
@@ -118,7 +136,7 @@ export function useMessages({ isMaster = false }: Props = {}) {
     };
 
     const stringified = JSON.stringify(fileMessage);
-    const encrypted = AES.encrypt(stringified, 'secret').toString();
+    const encrypted = AES.encrypt(stringified, sessionKey).toString();
 
     socket.emit('filePartToServer', encrypted);
   };

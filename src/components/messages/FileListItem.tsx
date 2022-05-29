@@ -22,6 +22,7 @@ export const FileListItem = (props: Props) => {
   const [content, setContent] = useState<string>('');
   const isMyMessage = props.file.user === useStore((store) => store.username);
   const socket = useStore((store) => store.socket);
+  const sessionkey = useStore((store) => store.sessionKey);
 
   const vStackCSS = {
     display: '-webkit-box',
@@ -31,7 +32,7 @@ export const FileListItem = (props: Props) => {
 
   useEffect(() => {
     socket.on('filePartToClient', (filePart: string) => {
-      const decryptedBytes = AES.decrypt(filePart, 'secret');
+      const decryptedBytes = AES.decrypt(filePart, sessionkey);
       const decryptedText = decryptedBytes.toString(enc.Utf8);
       const file = JSON.parse(decryptedText) as FilePartMessage;
 
