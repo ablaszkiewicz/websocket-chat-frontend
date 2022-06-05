@@ -12,6 +12,7 @@ import { SettingsHeader } from '../components/rooms/SettingsHeader';
 import { useMessages } from '../hooks/useMessages';
 import { useAuth } from '../hooks/useAuth';
 import { use100vh } from 'react-div-100vh';
+import { cryptico } from '@daotl/cryptico';
 
 export const App = () => {
   const { loginAsGuest } = useAuth();
@@ -20,6 +21,17 @@ export const App = () => {
 
   useEffect(() => {
     loginAsGuest();
+
+    // const message = 'Lubie pierogi';
+
+    // const key = cryptico.generateRSAKey('Kocham Aleksandra Waloszka!', 2048);
+    // const publicKey = cryptico.publicKeyString(key);
+
+    // const encrypted = cryptico.encrypt(message, publicKey, null as any);
+    // console.log((encrypted as any).cipher);
+
+    // const decrypted = cryptico.decrypt((encrypted as any).cipher, key);
+    // console.log(decrypted);
   }, []);
 
   return (

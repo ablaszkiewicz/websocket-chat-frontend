@@ -5,8 +5,8 @@ import ReactDOM from 'react-dom';
 import { App } from './pages/App';
 import * as serviceWorker from './serviceWorker';
 
-export const baseUrl = 'http://localhost:3001';
-//export const baseUrl = 'https://wschatserv.bieda.it';
+//export const baseUrl = 'http://localhost:3001';
+export const baseUrl = 'https://wschatserv.bieda.it';
 
 axios.defaults.baseURL = baseUrl;
 
